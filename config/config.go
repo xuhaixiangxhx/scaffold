@@ -13,6 +13,10 @@ const (
 	TimeFormat string = "2006-01-02 15:04:05"
 )
 
+var (
+	Port string
+)
+
 func initLogConfig(logLevel string) {
 	// 日志输出级别
 	if logLevel == "debug" {
@@ -30,7 +34,9 @@ func init() {
 	logging.Debug(nil, "开始加载程序配置")
 	// 环境变量方式加载程序配置
 	viper.SetDefault("LOG_LEVEL", "debug")
+	viper.SetDefault("PORT", ":8090")
 	viper.AutomaticEnv()
 	logLevel := viper.GetString("LOG_LEVEL")
+	Port = viper.GetString("PORT")
 	initLogConfig(logLevel)
 }
