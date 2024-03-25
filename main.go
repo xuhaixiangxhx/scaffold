@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"scaffold-demo/config"
+	"scaffold-demo/middlewares"
 	"scaffold-demo/routers"
 	"scaffold-demo/utils/jwtutil"
 
@@ -14,7 +15,7 @@ func main() {
 	// 1 加载程序配置
 	// 2 配置启动gin
 	r := gin.Default()
-
+	r.Use(middlewares.JWTAuth)
 	// 验证生成token的方法
 	ss, _ := jwtutil.GenToken("apple")
 	fmt.Println(ss)
