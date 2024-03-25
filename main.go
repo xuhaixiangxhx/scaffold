@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"scaffold-demo/config"
+	"scaffold-demo/routers"
 	"scaffold-demo/utils/jwtutil"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,7 @@ func main() {
 	// 1 加载程序配置
 	// 2 配置启动gin
 	r := gin.Default()
+
 	// 验证生成token的方法
 	ss, _ := jwtutil.GenToken("apple")
 	fmt.Println(ss)
@@ -25,5 +27,8 @@ func main() {
 		// 解析token成功
 		fmt.Println(claims)
 	}
+
+	routers.RegisterRouters(r)
+
 	r.Run(config.Port)
 }
