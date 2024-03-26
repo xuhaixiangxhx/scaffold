@@ -2,6 +2,7 @@
 package middlewares
 
 import (
+	"scaffold-demo/config"
 	"scaffold-demo/utils/jwtutil"
 	"scaffold-demo/utils/logging"
 
@@ -17,24 +18,23 @@ func JWTAuth(c *gin.Context) {
 		c.Next()
 		return
 	}
+	returdData := config.NewReturnData()
 	// 2 其他接口需要验证token
 	tokenString := c.Request.Header.Get("Authorization")
 	// 2.1 验证是否携带token
 	if tokenString == "" {
-		c.JSON(200, gin.H{
-			"message": "请求未携带Token，请先登录",
-			"status":  401,
-		})
+		returdData.Status = 401
+		returdData.Message = "请求未携带Token，请先登录"
+
+		c.JSON(200, returdData)
 		c.Abort()
 		return
 	}
 	// 2.2 验证token是否合法
 	claims, err := jwtutil.ParseToken(tokenString)
 	if err != nil {
-		c.JSON(200, gin.H{
-			"status":  200,
-			"message": "Token验证未通过",
-		})
+		returdData.Message = "Token验证未通过"
+		c.JSON(200, returdData)
 		c.Abort()
 		return
 	}

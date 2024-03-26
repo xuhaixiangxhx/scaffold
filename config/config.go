@@ -21,6 +21,22 @@ var (
 	Password      string
 )
 
+// 规范化定义返回格式
+type ReturnData struct {
+	Status  int                    `json:"status"`
+	Message string                 `json:"message"`
+	Data    map[string]interface{} `json:"data"`
+}
+
+// 使用构造函数初始化返回数据
+func NewReturnData() ReturnData {
+	returnData := ReturnData{}
+	returnData.Status = 200
+	data := make(map[string]interface{})
+	returnData.Data = data
+	return returnData
+}
+
 func initLogConfig(logLevel string) {
 	// 日志输出级别
 	if logLevel == "debug" {

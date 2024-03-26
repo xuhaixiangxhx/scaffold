@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"scaffold-demo/config"
 	"scaffold-demo/utils/jwtutil"
 	"scaffold-demo/utils/logging"
 
@@ -16,11 +17,11 @@ type UserInfo struct {
 func Login(c *gin.Context) {
 	// 1 获取前端传过来的用户名和密码
 	userInfo := UserInfo{}
+	returnData := config.NewReturnData()
 	if err := c.ShouldBindJSON(&userInfo); err != nil {
-		c.JSON(200, gin.H{
-			"message": err.Error(),
-			"status":  401,
-		})
+		returnData.Status = 401
+		returnData.Message = err.Error()
+		c.JSON(200, returnData)
 		return
 	}
 	logging.Debug(map[string]interface{}{"用户名": userInfo.Username, "密码": userInfo.Password}, "开始验证登录信息")
@@ -32,36 +33,29 @@ func Login(c *gin.Context) {
 		// 创建JWT Token失败
 		if err != nil {
 			logging.Error(map[string]interface{}{"用户名": userInfo.Username, "错误信息": err.Error()}, "用户名密码正确但生成Token失败")
-			c.JSON(200, gin.H{
-				"status":  401,
-				"message": "生成Token失败",
-			})
+			returnData.Status = 401
+			returnData.Message = "生成Token失败"
+			c.JSON(200, returnData)
 			return
 		}
 		// 创建JWT Token成功，返回给前端
 		logging.Info(map[string]interface{}{"用户名": userInfo.Username}, "登录成功")
-		data := make(map[string]interface{})
-		data["token"] = ss
-		c.JSON(200, gin.H{
-			"status":  200,
-			"message": "登录成功",
-			"data":    data,
-		})
+		returnData.Message = "登录成功"
+		returnData.Data["token"] = ss
+		c.JSON(200, returnData)
 		return
 	} else {
 		// 用户名密码错误
-		c.JSON(200, gin.H{
-			"status":  401,
-			"message": "用户名或密码错误",
-		})
+		returnData.Status = 401
+		returnData.Message = "用户名或密码错误"
+		c.JSON(200, returnData)
 	}
 }
 
 // 注销的逻辑
 func Logout(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "注销成功",
-		"status":  200,
-	})
+	returnData := config.NewReturnData()
+	returnData.Message = "注销成功"
+	c.JSON(200, returnData)
 	logging.Debug(nil, "用户已注销")
 }
