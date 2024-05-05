@@ -45,7 +45,7 @@ func initLogConfig(logLevel string) {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
 	// 日志输出格式，添加文件名和行号字段
-	logrus.SetReportCaller(true)
+	// logrus.SetReportCaller(true)
 	// 日志格式调整为json
 	logrus.SetFormatter(&logrus.JSONFormatter{TimestampFormat: TimeFormat})
 }
